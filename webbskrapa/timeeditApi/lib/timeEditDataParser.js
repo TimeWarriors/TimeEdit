@@ -11,9 +11,29 @@ const TimeEditDataParser = class {
         return $('#objectbasketitemX0').data('id');
     }
 
+    /**
+     * [todays room schedule information]
+     * @param  {[object]} object [cherio html object]
+     * @return {[object]}        [only todays room schedule information]
+     */
     buildTodaysSchedule(object){
-        if(!object.hasOwnProperty('reservations')){ throw 'invalid search result'; }
+        return this.buildRoomSchedule(object)
+            .filter((reservation) => {
+                let reservationDate = this.parseDate(reservation.booking.time.startDate);
+                let todaysDate = this.getTodaysDate();
 
+                return reservationDate.getFullYear() === todaysDate.getFullYear() &&
+                    reservationDate.getMonth() === todaysDate.getMonth() &&
+                    reservationDate.getDate() === todaysDate.getDate();
+            });
+    }
+    /**
+     * [gets room schedule information]
+     * @param  {[object]} object [cherio html object]
+     * @return {[object]}        [schedule information]
+     */
+    buildRoomSchedule(object){
+        if(!object.hasOwnProperty('reservations')){ throw 'invalid search result'; }
         return object.reservations
             .map((reservation) => {
                 return {
@@ -29,13 +49,6 @@ const TimeEditDataParser = class {
                         staff: reservation.columns[3]
                     }
                 };
-            }).filter((reservation) => {
-                let reservationDate = this.parseDate(reservation.booking.time.startDate);
-                let todaysDate = this.getTodaysDate();
-
-                return reservationDate.getFullYear() === todaysDate.getFullYear() &&
-                    reservationDate.getMonth() === todaysDate.getMonth() &&
-                    reservationDate.getDate() === todaysDate.getDate();
             });
     }
 
@@ -45,8 +58,7 @@ const TimeEditDataParser = class {
     }
 
     getTodaysDate(){
-        //year, month, day, hours, minutes, seconds, milliseconds
-        return new Date('2016', '2', '1', 0, 0,0); // fake date
+        return new Date();
     }
 
     parseDate(dateString){
