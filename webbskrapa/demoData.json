@@ -7,6 +7,7 @@
                 "startDate": "2016-03-01",
                 "startTime": "10:15"
             },
+            "roomId": "ny105",
             "id": "294261",
             "other": "",
             "staff": "Jacob Lindehoff, Jesper Andersson"
@@ -20,6 +21,7 @@
                 "startDate": "2016-03-01",
                 "startTime": "13:15"
             },
+            "roomId": "ny105",
             "id": "305369",
             "other": "https://connect.sunet.se/lecture-1dv023/",
             "staff": "Johan Leitet, John Häggerud, Mats Loock"

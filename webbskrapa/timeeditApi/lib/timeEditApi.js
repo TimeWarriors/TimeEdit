@@ -3,8 +3,8 @@ const TimeEditCrawler = require('./timeEditCrawler.js');
 const dataParser = require('./timeEditDataParser.js');
 
 const TimeEditAPi = class extends TimeEditCrawler {
-    constructor(url1, url2){
-        super(url1, url2);
+    constructor(url, types){
+        super(url, types);
     }
 
     /**
@@ -17,7 +17,7 @@ const TimeEditAPi = class extends TimeEditCrawler {
             this._doRoomSchedule(roomId)
                 .then((jsonString) => {
                     const parsedJson = JSON.parse(jsonString);
-                    resolve(dataParser.buildTodaysSchedule(parsedJson));
+                    resolve(dataParser.buildTodaysSchedule(parsedJson, roomId));
                 }).catch((er) => {
                     reject(er);
                 });
@@ -34,7 +34,7 @@ const TimeEditAPi = class extends TimeEditCrawler {
             this._doRoomSchedule(roomId)
                 .then((jsonString) => {
                     const parsedJson = JSON.parse(jsonString);
-                    resolve(dataParser.buildRoomSchedule(parsedJson));
+                    resolve(dataParser.buildRoomSchedule(parsedJson, roomId));
                 }).catch((er) => {
                     reject(er);
                 });
