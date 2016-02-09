@@ -6,34 +6,21 @@ const TimeEditDataParser = class {
 
     }
 
-    getDataId(html){
+    getDataIds(html){
         let $ = this._loadHtml(html);
-        return $('#objectbasketitemX0').data('id');
+        let dataIds = $('.searchObject').map((i, elem) => {
+            return $(elem).data('id');
+        }).get();
+        return dataIds.length > 0 ? dataIds : dataIds[0];
     }
 
     /**
-     * [todays room schedule information]
+     * [sorts schedule infromation]
      * @param  {[object]} object [cherio html object]
-     * @return {[object]}        [only todays room schedule information]
+     * @param  {[string]} id     []
+     * @return {[object]}        [sorted schedule infromation]
      */
-    buildTodaysSchedule(object, roomId){
-        let todaysSchedule = this.buildRoomSchedule(object, roomId)
-            .filter((reservation) => {
-                let reservationDate = this.parseDate(reservation.booking.time.startDate);
-                let todaysDate = this.getTodaysDate();
-
-                return reservationDate.getFullYear() === todaysDate.getFullYear() &&
-                    reservationDate.getMonth() === todaysDate.getMonth() &&
-                    reservationDate.getDate() === todaysDate.getDate();
-            });
-        return todaysSchedule.length > 0 ? todaysSchedule : [{ roomId }] ;
-    }
-    /**
-     * [gets room schedule information]
-     * @param  {[object]} object [cherio html object]
-     * @return {[object]}        [schedule information]
-     */
-    buildRoomSchedule(object, roomId){
+    buildSchedule(object, id){
         if(!object.hasOwnProperty('reservations')){ throw 'invalid search result'; }
         return object.reservations
             .map((reservation) => {
@@ -45,16 +32,33 @@ const TimeEditDataParser = class {
                             startDate: reservation.startdate,
                             startTime: reservation.starttime
                         },
-                        roomId,
-                        id: reservation.id,
-                        other: reservation.columns[8],
-                        staff: reservation.columns[3]
+                        id,
+                        bookingId: reservation.id,
+                        columns: reservation.columns
                     }
                 };
             });
     }
 
-    isRoomValid(html){
+    /**
+     * [todays room schedule information]
+     * @param  {[object]} object [cherio html object]
+     * @return {[object]}        [only todays room schedule information]
+     */
+    buildTodaysSchedule(object, id){
+        let todaysSchedule = this.buildSchedule(object, id)
+            .filter((reservation) => {
+                let reservationDate = this.parseDate(reservation.booking.time.startDate);
+                let todaysDate = this.getTodaysDate();
+
+                return reservationDate.getFullYear() === todaysDate.getFullYear() &&
+                    reservationDate.getMonth() === todaysDate.getMonth() &&
+                    reservationDate.getDate() === todaysDate.getDate();
+            });
+        return todaysSchedule.length > 0 ? todaysSchedule : [{ id }] ;
+    }
+
+    isValidSearch(html){
         let $ = this._loadHtml(html);
         return $('.searchObject').hasOwnProperty('0');
     }

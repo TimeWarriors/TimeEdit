@@ -8,16 +8,16 @@ const TimeEditAPi = class extends TimeEditCrawler {
     }
 
     /**
-     * [gets todays schedule for a room]
-     * @param  {[string]} roomId [name of a room]
-     * @return {[object]}        [todays schedule for a room]
+     * [schedule over multible days]
+     * @param  {[string]} id     [name of thing]
+     * @return {[object]}        [schedule over multible days]
      */
-    getTodaysRoomSchedule(roomId){
+    getSchedule(id){
         return new Promise((resolve, reject) => {
-            this._doRoomSchedule(roomId)
+            this._getSchedule(id)
                 .then((jsonString) => {
                     const parsedJson = JSON.parse(jsonString);
-                    resolve(dataParser.buildTodaysSchedule(parsedJson, roomId));
+                    resolve(dataParser.buildSchedule(parsedJson, id));
                 }).catch((er) => {
                     reject(er);
                 });
@@ -25,44 +25,43 @@ const TimeEditAPi = class extends TimeEditCrawler {
     }
 
     /**
-     * [room schedule over multible days]
-     * @param  {[string]} roomId [name of a room]
-     * @return {[object]}        [schedule for a room over multible days]
+     * [gets todays schedule for a room]
+     * @param  {[string]} id     [name of a thing]
+     * @return {[object]}        [todays schedule for a room]
      */
-    getRoomSchedule(roomId){
+    getTodaysSchedule(id){
         return new Promise((resolve, reject) => {
-            this._doRoomSchedule(roomId)
+            this._getSchedule(id)
                 .then((jsonString) => {
                     const parsedJson = JSON.parse(jsonString);
-                    resolve(dataParser.buildRoomSchedule(parsedJson, roomId));
+                    resolve(dataParser.buildTodaysSchedule(parsedJson, id));
                 }).catch((er) => {
                     reject(er);
                 });
         });
     }
 
-    _doRoomSchedule(roomId){
-        // super in promise v8 bugg fix
-        const roomSchedule = (html) => {
-            if(dataParser.isRoomValid(html)){
-                let dataId = dataParser.getDataId(html);
-                return super.getHtml(super.buildScheduleRoomURL(dataId));
-            }else {
-                throw 'room not valid';
+    _getSchedule(id){
+        const schedule = (html) => {
+            if(dataParser.isValidSearch(html)){
+                let dataId = dataParser.getDataIds(html);
+                return super.getHtml(super.buildScheduleURL(dataId));
             }
+            throw 'room not valid';
         };
+
         return new Promise((resolve, reject) => {
-            super.getHtml(super.buildRoomDataURL(roomId))
+            super.getHtml(super.buildDataURL(id))
                 .then((html) => {
-                    return roomSchedule(html);
-                })
-                .then((jsonString) => {
+                    return schedule(html);
+                }).then((jsonString) => {
                     resolve(jsonString);
                 }).catch((er) => {
                     reject(er);
                 });
         });
     }
+
 };
 
 module.exports = TimeEditAPi;

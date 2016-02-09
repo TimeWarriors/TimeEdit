@@ -9,20 +9,28 @@ const init = () => {
     );
 
     // todays room schedule
-    timeEdidApiLnu.getTodaysRoomSchedule('ny110')
+    /*timeEdidApiLnu.getTodaysSchedule('ny105')
         .then((roomSchedule) => {
-            console.log(roomSchedule);
+            console.log(JSON.stringify(roomSchedule, null ,2));
+        }).catch((er) => {
+            console.log(er);
+        });*/
+
+
+    timeEdidApiLnu.getSchedule('ny105')
+        .then((schedule) => {
+            console.log(JSON.stringify(schedule, null ,2));
         }).catch((er) => {
             console.log(er);
         });
 
     // full room schedule
-    timeEdidApiLnu.getRoomSchedule('ny160')
+    /*timeEdidApiLnu.getSchedule('ny111')
         .then((roomSchedule) => {
             console.log(roomSchedule);
         }).catch((er) => {
             console.log(er);
-        });
+        });*/
 
 
     // liu
@@ -31,14 +39,14 @@ const init = () => {
         195
     );
 
-    timeEdidApiLiu.getTodaysRoomSchedule('a311')
+    timeEdidApiLiu.getTodaysSchedule('a311')
         .then((roomSchedule) => {
             console.log(roomSchedule);
         }).catch((er) => {
             console.log(er);
         });
 
-    timeEdidApiLiu.getRoomSchedule('a311')
+    timeEdidApiLiu.getSchedule('a311')
         .then((roomSchedule) => {
             console.log(roomSchedule);
         }).catch((er) => {

@@ -5,8 +5,10 @@ const request = require('request');
 const TimeEditCrawler = class {
     constructor(originUrl, types) {
         this.originUrl = originUrl;
-        this.roomUrl = `objects.html?max=15&fr=t&partajax=t&im=f&sid=3&l=sv_SE&search_text=&types=${types}`;
+
+        this.searchURL = `objects.html?max=15&fr=t&partajax=t&im=f&sid=3&l=sv_SE&search_text=&types=${types}`;
         this.scheduleUrl = 'ri.json?h=f&sid=3&p=0.m%2C12.n&objects=&ox=0&types=0&fe=0&h2=f';
+
         this.searchText = 'search_text=';
         this.objectsText = 'objects=';
     }
@@ -27,14 +29,25 @@ const TimeEditCrawler = class {
         });
     }
 
-    buildRoomDataURL(roomId){
-        let urlArray = this._splitString(this.roomUrl, this.searchText);
-        return this.originUrl + this._joinString(urlArray, `${this.searchText}${roomId}`);
+    buildDataURL(id){
+        let urlArray = this._splitString(this.searchURL, this.searchText);
+        return this.originUrl + this._joinString(urlArray, `${this.searchText}${id}`);
     }
 
-    buildScheduleRoomURL(roomDataId){
+    buildScheduleURL(dataId){
+        return  Array.isArray(dataId) ?
+            this._buildMultibleScheduleURL(dataId) :
+            this._buildScheduleURL(dataId);
+    }
+
+    _buildScheduleURL(dataId){
         let urlArray = this._splitString(this.scheduleUrl, this.objectsText);
-        return this.originUrl + this._joinString(urlArray, `${this.objectsText}${roomDataId}`);
+        return this.originUrl + this._joinString(urlArray, `${this.objectsText}${dataId}`);
+    }
+
+    _buildMultibleScheduleURL(dataIds){
+        let urlArray = this._splitString(this.scheduleUrl, this.objectsText);
+        return this.originUrl + this._joinString(urlArray, `${this.objectsText}${dataIds.join()}`);
     }
 
     _splitString(string, splitWord){
@@ -45,6 +58,5 @@ const TimeEditCrawler = class {
         return array.join(joinOn);
     }
 };
-
 
 module.exports = TimeEditCrawler;
