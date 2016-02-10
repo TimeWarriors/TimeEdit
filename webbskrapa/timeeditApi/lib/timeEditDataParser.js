@@ -6,10 +6,13 @@ const TimeEditDataParser = class {
 
     }
 
-    getDataIds(html){
+    getSearchData(html){
         let $ = this._loadHtml(html);
         let dataIds = $('.searchObject').map((i, elem) => {
-            return $(elem).data('id');
+            return {
+                id: $(elem).data('id'),
+                name: $(elem).data('name')
+            };
         }).get();
         return dataIds.length > 0 ? dataIds : dataIds[0];
     }

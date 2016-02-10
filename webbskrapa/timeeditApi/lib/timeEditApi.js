@@ -7,10 +7,35 @@ const TimeEditAPi = class extends TimeEditCrawler {
         super(url, types);
     }
 
+    _search(html){
+        if(dataParser.isValidSearch(html)){
+            return dataParser.getSearchData(html);
+        }
+        throw 'room not valid';
+    }
+
+    /**
+     * [check if x exsits]
+     * @param  {[string / array of strings]} id [text for what you want to search for]
+     * @return {[promise]}    [search result]
+     */
+    search(id){
+        return new Promise((resolve, reject) => {
+            super.getHtml(super.buildDataURL(id))
+                .then((html) => {
+                    return this._search(html);
+                }).then((searchData) => {
+                    resolve(searchData);
+                }).catch((er) => {
+                    reject(er);
+                });
+        });
+    }
+
     /**
      * [schedule over multible days]
-     * @param  {[string]} id     [name of thing]
-     * @return {[object]}        [schedule over multible days]
+     * @param  {[string / array of strings]} id     [name of thing]
+     * @return {[promise]}        [schedule over multible days]
      */
     getSchedule(id){
         return new Promise((resolve, reject) => {
@@ -26,8 +51,8 @@ const TimeEditAPi = class extends TimeEditCrawler {
 
     /**
      * [gets todays schedule for a room]
-     * @param  {[string]} id     [name of a thing]
-     * @return {[object]}        [todays schedule for a room]
+     * @param  {[string / array of strings]} id     [name of a thing]
+     * @return {[promise]}        [todays schedule for a room]
      */
     getTodaysSchedule(id){
         return new Promise((resolve, reject) => {
@@ -42,18 +67,16 @@ const TimeEditAPi = class extends TimeEditCrawler {
     }
 
     _getSchedule(id){
-        const schedule = (html) => {
-            if(dataParser.isValidSearch(html)){
-                let dataId = dataParser.getDataIds(html);
-                return super.getHtml(super.buildScheduleURL(dataId));
-            }
-            throw 'room not valid';
+        // super in 'then' promise bugg quick fix
+        const buildSchedule = (searchData) => {
+            let dataIds = searchData.map(data => data.id);
+            return super.getHtml(super.buildScheduleURL(dataIds));
         };
 
         return new Promise((resolve, reject) => {
             super.getHtml(super.buildDataURL(id))
                 .then((html) => {
-                    return schedule(html);
+                    return buildSchedule(this._search(html));
                 }).then((jsonString) => {
                     resolve(jsonString);
                 }).catch((er) => {
