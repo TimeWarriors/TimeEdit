@@ -1,6 +1,6 @@
 {
   "name": "timeeditapi",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "api to easy get schedule information from timeedit",
   "main": "index.js",
   "scripts": {
