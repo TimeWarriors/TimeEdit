@@ -32,26 +32,15 @@ const init = () => {
             console.log(er);
         });
 
-
-    // liu
-    /*const timeEdidApiLiu = new TimeEdidApi(
-        'https://se.timeedit.net/web/liu/db1/schema/',
-        195
-    );
-
-    timeEdidApiLiu.getTodaysSchedule('a311')
-        .then((roomSchedule) => {
-            console.log(roomSchedule);
+    // get the diffrent types of schedule
+    TimeEdidApi.getAllTypes(
+            'https://se.timeedit.net/web/lnu/db1/schema1/'
+        ).then((result) => {
+            console.log(JSON.stringify(result, null ,2));
         }).catch((er) => {
             console.log(er);
         });
 
-    timeEdidApiLiu.getSchedule('a311')
-        .then((roomSchedule) => {
-            console.log(roomSchedule);
-        }).catch((er) => {
-            console.log(er);
-        });*/
 };
 
 init();
