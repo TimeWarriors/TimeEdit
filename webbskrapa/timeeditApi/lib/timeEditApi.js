@@ -18,12 +18,9 @@ const TimeEditAPi = class extends TimeEditCrawler {
         const t = new TimeEditCrawler(url);
         return new Promise(function(resolve, reject) {
             t.getHtml(t.getTypeUrl())
-                .then(html => resolve(
-                    dataParser.getTypes(html)))
+                .then(html => resolve(dataParser.getTypes(html)))
                 .catch(e => reject(e));
         });
-
-
     }
 
     /**
@@ -34,13 +31,9 @@ const TimeEditAPi = class extends TimeEditCrawler {
     search(id){
         return new Promise((resolve, reject) => {
             super.getHtml(super.buildDataURL(id))
-                .then((html) => {
-                    return this._search(html);
-                }).then((searchData) => {
-                    resolve(searchData);
-                }).catch((er) => {
-                    reject(er);
-                });
+                .then(html =>  this._search(html))
+                .then(searchData => resolve(searchData))
+                .catch(er => reject(er));
         });
     }
 
@@ -52,12 +45,10 @@ const TimeEditAPi = class extends TimeEditCrawler {
     getSchedule(id){
         return new Promise((resolve, reject) => {
             this._getSchedule(id)
-                .then((jsonString) => {
+                .then(jsonString => {
                     const parsedJson = JSON.parse(jsonString);
                     resolve(dataParser.buildSchedule(parsedJson, id));
-                }).catch((er) => {
-                    reject(er);
-                });
+                }).catch(er => reject(er));
         });
     }
 
@@ -69,12 +60,10 @@ const TimeEditAPi = class extends TimeEditCrawler {
     getTodaysSchedule(id){
         return new Promise((resolve, reject) => {
             this._getSchedule(id)
-                .then((jsonString) => {
+                .then(jsonString => {
                     const parsedJson = JSON.parse(jsonString);
                     resolve(dataParser.buildTodaysSchedule(parsedJson, id));
-                }).catch((er) => {
-                    reject(er);
-                });
+                }).catch(er => reject(er));
         });
     }
 
@@ -87,13 +76,9 @@ const TimeEditAPi = class extends TimeEditCrawler {
 
         return new Promise((resolve, reject) => {
             super.getHtml(super.buildDataURL(id))
-                .then((html) => {
-                    return buildSchedule(this._search(html));
-                }).then((jsonString) => {
-                    resolve(jsonString);
-                }).catch((er) => {
-                    reject(er);
-                });
+                .then(html => buildSchedule(this._search(html)))
+                .then(jsonString => resolve(jsonString))
+                .catch(er => reject(er));
         });
     }
 
