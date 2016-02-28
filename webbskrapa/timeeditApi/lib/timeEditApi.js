@@ -14,6 +14,11 @@ const TimeEditAPi = class extends TimeEditCrawler {
         throw 'room not valid';
     }
 
+    /**
+     * [gets types name and types value in array]
+     * @param  {[string]} url [timeedit url]
+     * @return {[promise]}     [array of object with all types]
+     */
     static getAllTypes(url){
         const t = new TimeEditCrawler(url);
         return new Promise(function(resolve, reject) {
