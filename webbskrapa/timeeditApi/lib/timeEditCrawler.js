@@ -4,6 +4,9 @@ const request = require('request');
 
 const TimeEditCrawler = class {
     constructor(originUrl, types) {
+        if(!this.validUrl(originUrl)){
+            throw 'invalid url';
+        }
         this.originUrl = originUrl;
 
         this.searchURL = `objects.html?max=15&fr=t&partajax=t&im=f&sid=3&l=sv_SE&search_text=&types=${types}`;
@@ -27,6 +30,39 @@ const TimeEditCrawler = class {
                 return reject(error);
             });
         });
+    }
+
+    isHtmlURL(url){
+        let reg = new RegExp('html');
+        return this.originUrl.match(reg);
+    }
+
+    getJsonUrlFromHtmlUrl(url){
+        url = url || this.originUrl;
+        let reg = new RegExp('html');
+        return url.replace(reg, 'json');
+    }
+
+    /**
+     * [checks if url is valid or not]
+     * @return {[bool]} [if url is valid or not]
+     */
+    validUrl(url){
+        url = url || this.originUrl;
+        let timeeditReg = new RegExp('timeedit');
+        let urlReg = new RegExp('^(https?:\\/\\/)?'+
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+
+        '(\\#[-a-z\\d_]*)?$','i');
+        if(!urlReg.test(url)){
+            return false;
+        }
+        if(!url.match(timeeditReg)){
+            return false;
+        }
+        return true;
     }
 
     getTypeUrl(){

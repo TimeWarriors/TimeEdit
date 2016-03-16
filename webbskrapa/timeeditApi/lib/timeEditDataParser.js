@@ -29,12 +29,23 @@ const TimeEditDataParser = class {
     }
 
     /**
+     * [gets name of searched item]
+     * @param  {[string]} html [html to load into cherrio]
+     * @return {[string]}      [searched item name]
+     */
+    getSearchId(html){
+        let $ = this._loadHtml(html);
+        return $('#searchTextWide').text().trim();
+    }
+
+    /**
      * [sorts schedule infromation]
      * @param  {[object]} object [cherio html object]
      * @param  {[string]} id     []
      * @return {[object]}        [sorted schedule infromation]
      */
     buildSchedule(object, id){
+        id = id || null;
         if(!object.hasOwnProperty('reservations')){ throw 'invalid search result'; }
         return object.reservations
             .map((reservation) => {

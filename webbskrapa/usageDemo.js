@@ -5,7 +5,7 @@ const init = () => {
     // lnu
     const timeEdidApiLnu = new TimeEdidApi(
         'https://se.timeedit.net/web/lnu/db1/schema1/',
-        4
+        3
     );
 
     // todays schedule
@@ -35,6 +35,15 @@ const init = () => {
     // get the diffrent types of schedule
     TimeEdidApi.getAllTypes(
             'https://se.timeedit.net/web/lnu/db1/schema1/'
+        ).then((result) => {
+            console.log(JSON.stringify(result, null ,2));
+        }).catch((er) => {
+            console.log(er);
+        });
+
+    // get schedule by schedule url
+    TimeEdidApi.getScheduleByScheduleUrl(
+            'https://se.timeedit.net/web/lnu/db1/schema1/s.html?i=6Y7XYQQ7wZ36QvZ5071875y7YQ8'
         ).then((result) => {
             console.log(JSON.stringify(result, null ,2));
         }).catch((er) => {
