@@ -11,7 +11,29 @@ const TimeEditAPi = class extends TimeEditCrawler {
         if(dataParser.isValidSearch(html)){
             return dataParser.getSearchData(html);
         }
-        throw 'room not valid';
+        throw 'not valid search';
+    }
+
+    static getScheduleByScheduleUrl(url){
+        const t = new TimeEditCrawler(url);
+        return new Promise(function(resolve, reject) {
+            if(t.isHtmlURL()){
+                t.getHtml(url)
+                    .then(html => dataParser.getSearchId(html))
+                    .then(id => {
+                        const jsonUrl = t.getJsonUrlFromHtmlUrl();
+                        t.getHtml(jsonUrl)
+                            .then(jsonString => JSON.parse(jsonString))
+                            .then(parsedJson => resolve(dataParser.buildSchedule(parsedJson, id)))
+                            .catch(e => reject(e));
+                    });
+            }else{
+                t.getHtml(url)
+                    .then(jsonString => JSON.parse(jsonString))
+                    .then(parsedJson => resolve(dataParser.buildSchedule(parsedJson)))
+                    .catch(e => reject(e));
+            }
+        });
     }
 
     /**
