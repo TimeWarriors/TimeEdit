@@ -50,6 +50,12 @@ const init = () => {
             console.log(er);
         });
 
+    timeEdidApiLnu.getScheduleByItemId(244051.5)
+        .then((schedule) => {
+            console.log(schedule);
+        }).catch((er) => {
+            console.log(er);
+        });
 };
 
 init();

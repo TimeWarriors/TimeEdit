@@ -64,6 +64,14 @@ const TimeEditAPi = class extends TimeEditCrawler {
         });
     }
 
+    getScheduleByItemId(itemId){
+        return new Promise((resolve, reject) => {
+            super.getHtml(super.buildScheduleURL(itemId))
+                .then(jsonString => resolve(jsonString))
+                .catch(er => reject(er));
+        });
+    }
+
     /**
      * [schedule over multible days]
      * @param  {[string / array of strings]} id     [name of thing]
